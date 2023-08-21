@@ -282,8 +282,9 @@ plt.show
 
 ### European Journal of Operational Research
 
-[open access to the paper](https://www.sciencedirect.com/science/article/pii/S0377221721000886)
+Principal component analysis: A generalized Gini approach
 
+[open access to the paper](https://www.sciencedirect.com/science/article/pii/S0377221721000886)
 
 [Stéphane Mussard CV_HAL](https://cv.archives-ouvertes.fr/stephane-mussard)
 
