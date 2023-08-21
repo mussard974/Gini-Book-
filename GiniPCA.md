@@ -97,7 +97,7 @@ model.project(x)
 ```
 
 
-### Otherwise find the optimal Gini parameter: Grid search
+### Find the optimal Gini parameter: Grid search
 
 
 ```python
