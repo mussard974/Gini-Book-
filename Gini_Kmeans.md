@@ -119,3 +119,6 @@ plt.title("Rank vs. values : dim1")
 plt.show()
 ```
 
+![png](Figue_Kmeans.png)
+
+
