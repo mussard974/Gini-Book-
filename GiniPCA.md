@@ -14,12 +14,12 @@ In this package, we find:
   * Absolute contributions of the observations 
   * Relative contributions of the observations (equivalent to cos²)
   * Feature importance of each variable (U-statistics test)
-  * Feature importance of each variable in the standard PCA (U-statistics test)
   * Outlier detection using Grubbs test 
-  * Example on Iris data below
+  * Example on cars data
 
 
 ### Install outlier_utils and iteration-utilities
+* torch >= 1.9.0
 ```python
 !pip install outlier_utils
 !pip install iteration-utilities
@@ -32,24 +32,66 @@ In this package, we find:
 from Gini_PCA import GiniPca
 ```
 
-### Import data and plot utilities: example on iris data
+### Import data and plot utilities: example on cars data
 
 
 ```python
-from sklearn.datasets import load_iris
+from Gini_PCA import GiniPca
+import torch
+import pandas as pd
+import numpy as np
+import scipy.stats as ss
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import scale
 from mpl_toolkits.mplot3d import Axes3D
-iris = load_iris()
-x = iris.data
+from outliers import smirnov_grubbs as grubbs
+from iteration_utilities import deepflatten
+cars = pd.read_excel("cars.xlsx", index_col=0)
+type(cars)
+x = torch.DoubleTensor(cars.values)
 ```
 
 ### Run the model by setting your own Gini parameter >=0.1 and != 1
 
-
 ```python
-gini_param = 6
+gini_param = 2
 model = GiniPca(gini_param)
 ```
+
+
+### Ranks matrix
+
+```python
+model.ranks(x)
+```
+
+
+### Gini mean difference (GMD) matrix
+
+```python
+model.gmd(x)
+```
+
+
+### Gini correlation matrix
+
+```python
+z = model.scale_gini(x)
+print('Gini correlation:', '\n', model.gmd(z))
+```
+
+Gini correlation: 
+ tensor([[1.0000, 0.9643, 0.9025, 0.7347, 0.8840, 0.7317],
+        [0.9554, 1.0000, 0.9647, 0.5606, 0.8245, 0.6209],
+        [0.8472, 0.9482, 1.0000, 0.4510, 0.6802, 0.5822],
+        [0.8111, 0.6868, 0.5071, 1.0000, 0.8299, 0.8179],
+        [0.8366, 0.7860, 0.6570, 0.5681, 1.0000, 0.7433],
+        [0.8276, 0.7268, 0.6787, 0.8520, 0.8511, 1.0000]], dtype=torch.float64)
+
+
+
+
 
 ### Otherwise find the optimal Gini parameter: Grid search
 
