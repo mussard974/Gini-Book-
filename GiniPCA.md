@@ -1,6 +1,6 @@
 # Gini-PCA
 
----
+--
 
 ### Gini PCA is a robust L1-norm PCA based on the generalized Gini index
 
@@ -275,6 +275,14 @@ ax.set_zlabel("3rd component")
 ax.w_zaxis.set_ticklabels([])
 plt.show
 ```
+
+
+A. Charpentier, S. Mussard & T. Ouraga (2020)
+***
+
+### European Journal of Operational Research
+[open access to the paper](https://www.sciencedirect.com/science/article/pii/S0377221721000886)
+
 
 [Stéphane Mussard CV_HAL](https://cv.archives-ouvertes.fr/stephane-mussard)
 
