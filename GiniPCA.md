@@ -56,7 +56,7 @@ model = GiniPca(gini_param)
 ```
 
 
-### Ranks matrix
+### Rank matrix
 
 ```python
 model.ranks(x)
