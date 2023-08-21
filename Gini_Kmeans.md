@@ -85,3 +85,37 @@ print('True labels: ', true_labels.T)
       2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.
       3. 3. 3. 3. 3. 3. 3. 3. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4. 4.
       4. 4. 4. 4.]]
+
+### Graph
+
+```python
+X_all = np.concatenate((X_train, center, center_gini), axis=0) 
+rank_all = np.zeros((X_all.shape[0], X_all.shape[1]))
+for i in range(X_all.shape[1]):
+    rank_all[:,i] = ss.rankdata(X_all[:,i], method='average')
+
+centroid_true = np.concatenate((np.mean(x1, axis=0),np.mean(x2, axis=0),np.mean(x3, axis=0),
+                np.mean(x4, axis=0),np.mean(x5, axis=0)), axis=0)
+centroid_true = np.reshape(centroid_true,(5,dim))
+X_all = np.concatenate((X_train, center, center_gini, centroid_true), axis=0) 
+rank_all = np.zeros((X_all.shape[0], X_all.shape[1]))
+for i in range(X_all.shape[1]):
+    rank_all[:,i] = ss.rankdata(X_all[:,i], method='average')
+
+plt.plot([x for x in rank_all[:,0]],
+                [y for y in X_all[:,0]],
+                'k+',markersize=2)
+plt.plot([x for x in rank_all[100:105,0]],
+                [y for y in X_all[100:105,0]],
+                'b.',label='L2 centroids', markersize=10)
+plt.plot([x for x in rank_all[105:110,0]],
+                [y for y in X_all[105:110,0]],
+                'r.',label='Gini centroids', markersize=10)
+plt.plot([x for x in rank_all[110:115,0]],
+                [y for y in X_all[110:115,0]],
+                'g.',label='True centroids', markersize=10)
+plt.legend(loc="best")
+plt.title("Rank vs. values : dim1")
+plt.show()
+```
+
