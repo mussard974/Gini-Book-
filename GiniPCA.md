@@ -79,18 +79,26 @@ model.gmd(x)
 ```python
 z = model.scale_gini(x)
 print('Gini correlation:', '\n', model.gmd(z))
+# or model.gini_correl(x)
 ```
 
-Gini correlation: 
- tensor([[1.0000, 0.9643, 0.9025, 0.7347, 0.8840, 0.7317],
-        [0.9554, 1.0000, 0.9647, 0.5606, 0.8245, 0.6209],
-        [0.8472, 0.9482, 1.0000, 0.4510, 0.6802, 0.5822],
-        [0.8111, 0.6868, 0.5071, 1.0000, 0.8299, 0.8179],
-        [0.8366, 0.7860, 0.6570, 0.5681, 1.0000, 0.7433],
-        [0.8276, 0.7268, 0.6787, 0.8520, 0.8511, 1.0000]], dtype=torch.float64)
+
+    Gini correlation: 
+     tensor([[1.0000, 0.9643, 0.9025, 0.7347, 0.8840, 0.7317],
+            [0.9554, 1.0000, 0.9647, 0.5606, 0.8245, 0.6209],
+            [0.8472, 0.9482, 1.0000, 0.4510, 0.6802, 0.5822],
+            [0.8111, 0.6868, 0.5071, 1.0000, 0.8299, 0.8179],
+            [0.8366, 0.7860, 0.6570, 0.5681, 1.0000, 0.7433],
+            [0.8276, 0.7268, 0.6787, 0.8520, 0.8511, 1.0000]], dtype=torch.float64)
 
 
 
+
+### Principal Components
+
+```python
+model.project(x)
+```
 
 
 ### Otherwise find the optimal Gini parameter: Grid search
@@ -101,22 +109,15 @@ parameter = model.optimal_gini_param(x)
 print(parameter)
 ```
 
-    0.1
+    tensor(1.4000)
     
 
-### Project the data x onto the new subspace
+### Eigenvalues 
 
 
 ```python
-scores = model.project(x)
-```
-
-### 3D plot
-
-
-```python
-y = iris.target
-model.plot3D(x, y) 
+model = GiniPca(gini_param = 1.4)
+model.eigen_val(x)
 ```
 
 
@@ -127,27 +128,47 @@ model.plot3D(x, y)
 
 
 ```python
-model.act(x)*100
+model.absolute_contrib(x)*100
+# Absolute contributions: CTA
+U = model.u_stat(x)
+U_test = []
+for i,value in enumerate(U[0,:]):
+    if torch.abs(value) >= 1.96:
+        U_test.append(cars.columns[i])
+print("Significant variables on axis 1:", U_test)
 ```
 
 
 
 
-    array([[ 4.14204577e-01,  3.36374074e-01,  1.18452709e+00,
-            -6.10196220e-02],
-           [ 6.03226665e-01, -9.35206328e-02, -1.40846480e-01,
-             6.88762710e-03],
-           [ 1.73121668e+00, -8.75352630e-03, -8.74836712e-01,
-            -8.07322629e-01],
-           [ 1.09951951e+00,  3.01913547e-02, -1.76259247e+00,
-             2.33765060e+00],
-             
-             ...
-             
-           [ 5.14220524e-01,  3.79632062e-01,  4.06749751e-01,
-             1.10654297e-02],
-           [-1.90812939e-01,  8.13731181e-01, -1.25608092e-01,
-             1.31341783e-01], 1.19623781e-01]])
+     tensor([[ 1.4321e+01, -4.3653e-01,  5.5242e+00,  4.6318e+00,  1.2128e+00,
+              -1.5419e+00],
+             [ 3.3132e+01, -9.8679e-02,  3.2156e+00, -1.8731e+00,  3.6428e+00,
+               3.1161e-01],
+             [ 2.2770e+00,  1.1940e+01,  6.7543e+00, -4.0211e+00,  1.8223e+01,
+               3.3657e+00],
+             [ 1.1359e+01,  4.6219e-01,  1.8559e+00, -9.3119e+00,  1.9082e-03,
+               6.2998e-02],
+             [ 1.6150e-02,  4.7812e+00,  1.5500e+01, -3.8179e+00,  4.0791e+00,
+               9.6277e-01],
+             [-4.5411e-01,  6.1426e-01,  6.9122e+00, -7.6113e+00,  8.1519e+00,
+               2.7404e-01],
+             [ 2.9533e+00,  2.4478e+00,  2.0845e+01,  1.2843e-01,  5.0505e+00,
+               1.0984e+00],
+             [ 8.6755e-01, -1.0552e-02,  3.4102e-01,  3.0412e-01, -1.5226e-01,
+               8.3536e-01],
+             [-8.5698e-02,  3.1131e-01,  1.2388e+00, -1.9017e-01,  5.7092e+00,
+               4.0813e+01],
+             [ 1.3944e+00,  8.0018e-02,  1.2497e+00,  2.2567e-01, -5.6112e-02,
+               9.9347e-02],
+             [ 1.1390e+00, -7.6144e-02,  1.1224e+00,  2.4850e-01,  1.5366e+00,
+               1.3370e+00],
+             [ 4.0577e+00,  1.3656e-02, -6.4956e-02,  5.0605e+00, -1.2223e+00,
+               7.8981e-01],
+             [ 4.2846e+00, -3.3537e-01,  3.9474e-01, -4.4173e+00, -8.8300e-01,
+     ...
+
+     Significant variables on axis 1: ['Cylinder', 'Power', 'Speed', 'Weight', 'Width', 'Length']
 
 
 
@@ -155,31 +176,20 @@ model.act(x)*100
 
 
 ```python
-model.rct(x)
+model.relative_contrib(x)
 ```
 
 
 
-
-    array([[9.83548621e-03, 6.62780300e-03, 7.31376244e-03, 3.55074089e-03],
-           [9.79396153e-03, 3.63358371e-03, 8.43032568e-03, 3.07092805e-04],
-           [1.06682515e-02, 4.60316819e-04, 3.77033540e-03, 2.55039508e-03],
-           [1.04770642e-02, 2.80338240e-03, 2.56572182e-03, 7.13775902e-03],
-           [1.01898345e-02, 8.19383690e-03, 4.86520485e-03, 5.80896914e-03],
-           [8.30159091e-03, 1.52459327e-02, 4.46401173e-03, 2.61005226e-03],
-           [1.06020351e-02, 3.00105569e-03, 1.50962919e-03, 3.81757834e-03],
-           [9.80989222e-03, 4.32593652e-03, 6.34627377e-03, 5.86495062e-03],
-           
-           ...
-           
-           [1.09226562e-02, 7.28351809e-03, 1.34211922e-03, 4.94671582e-03],
-           [1.00976884e-02, 1.78461923e-03, 9.06928902e-03, 8.06161896e-03],
-           [9.14272028e-03, 1.14552554e-02, 1.01268257e-02, 4.59214222e-03],
-           [4.59906381e-03, 1.31378979e-03, 1.22116519e-02, 2.95281106e-03]])
+### Correlations between the variables and the components
 
 
+```python
+model.gini_correl_axis(x)
+```
 
-### Feature importance in Gini PCA (factors loadings)
+
+### Feature importance in Gini PCA 
 
 * U-statistics > 2.57: significance of 1% 
 * U-statistics > 1.96: significance of 5% 
@@ -190,31 +200,21 @@ model.rct(x)
 model.u_stat(x)
 ```
 
-
-
-
-    array([[-40.30577176,   0.94614065, -48.12517983, -45.22470418],
-           [ -3.12762227, -23.76476321,   1.35866338,   1.26459391]])
-
-
-
-### Feature importance in standard PCA (factors loadings)
-
-* U-statistics > 2.57: significance of 1% 
-* U-statistics > 1.96: significance of 5% 
-* U-statistics > 1.65: significance of 10% 
-
+    tensor([[-11.8682, -11.0836,  -9.6512,  -3.9614,  -7.6724,  -6.4632],
+            [ -0.1559,  -0.7875,  -1.1760,   1.8336,   0.3508,   1.5903]],
+           dtype=torch.float64)
 
 ```python
-model.u_stat_pca(x)
+# Absolute contributions: CTA
+U = model.u_stat(x)
+U_test = []
+for i,value in enumerate(U[1,:]):
+    if torch.abs(value) >= 1.96:
+        U_test.append(cars.columns[i])
+print("Significant variables on axis 1:", U_test)
 ```
 
-
-
-
-    array([[11.78270546, -5.86022403, 15.57293717, 15.58145032],
-           [-4.06529552, -7.43327168, -0.27455139, -0.79030779]])
-
+    Significant variables on axis 1: []
 
 
 
@@ -222,7 +222,62 @@ model.u_stat_pca(x)
 
 
 ```python
-model.optimal_gini_param(x)
+# Grubbs test
+components = model.project(x)
+components_copy = components.numpy()
+outliers_var = []
+outliers_gini = []
+for i in range (2):
+    outliers_var.append(grubbs.max_test_indices(comp_var[:,i], alpha = 0.05))
+    outliers_gini.append(grubbs.max_test_indices(components_copy[:,i], alpha = 0.05))
+print('Atypical points in standard PCA:', outliers_var)
+print('Atypical points in Gini PCA:', outliers_gini)
+```
+
+
+### Circle of correlations
+
+
+```python
+# Circle of correlations
+project_var = model.gini_correl_axis(x)
+
+fig = plt.figure(figsize=(8,8))
+ax = fig.add_subplot(1, 1, 1)
+for i, j, label in zip(project_var[0,:],project_var[1,:], cars.columns):
+    plt.text(i, j, label)
+    plt.arrow(0,0,i,j,color='gray')
+plt.axis((-2.2,2.2,2.2,-2.2))
+
+# Circle
+circle = plt.Circle((0,0), radius=2.1, color='blue', fill=False)
+ax.add_patch(circle)
+plt.axvline(0, color='r') # vertical axis
+plt.axhline(0, color='r') # horizontal axis
+plt.xlabel("Axis 1")
+plt.ylabel("Axis 2")
+plt.show()
+```
+
+
+### 3D Plot
+
+```python
+# 3D Plot
+n, k = x.shape
+fig = plt.figure(1, figsize=(8, 6))
+ax = Axes3D(fig, elev=-150, azim=110)
+F = model.project(x)
+for line in range(n):
+    ax.scatter(F[line, 0], F[line, 1], F[line, 2], cmap=plt.cm.Set1, edgecolor='k', s=40)
+    ax.text(F[line, 0], F[line, 1], F[line, 2], s=cars.index[line], size=10,  color='k') 
+ax.set_xlabel("1st component")
+ax.w_xaxis.set_ticklabels([])
+ax.set_ylabel("2nd component")
+ax.w_yaxis.set_ticklabels([])
+ax.set_zlabel("3rd component")
+ax.w_zaxis.set_ticklabels([])
+plt.show
 ```
 
 [Stéphane Mussard CV_HAL](https://cv.archives-ouvertes.fr/stephane-mussard)
