@@ -280,9 +280,9 @@ plt.show
 
 
 
-### European Journal of Operational Research
+### Principal component analysis: A generalized Gini approach
 
-Principal component analysis: A generalized Gini approach
+European Journal of Operational Research
 
 [open access to the paper](https://www.sciencedirect.com/science/article/pii/S0377221721000886)
 
