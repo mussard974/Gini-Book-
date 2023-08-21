@@ -117,8 +117,6 @@ model.eigen_val(x)
 ```
 
 
-![png](output_14_0.png)
-
 
 ### Absolute contributions in %
 
@@ -255,6 +253,7 @@ plt.ylabel("Axis 2")
 plt.show()
 ```
 
+![png](circle.png)
 
 ### 3D Plot
 
@@ -275,6 +274,8 @@ ax.set_zlabel("3rd component")
 ax.w_zaxis.set_ticklabels([])
 plt.show
 ```
+
+![png](plot3D.png)
 
 
 A. Charpentier, S. Mussard & T. Ouraga (2020)
