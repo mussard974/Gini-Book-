@@ -1,6 +1,6 @@
 # Gini-PCA
 
---
+---
 
 ### Gini PCA is a robust L1-norm PCA based on the generalized Gini index
 
