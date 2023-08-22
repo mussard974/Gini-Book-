@@ -37,7 +37,7 @@ class GiniKmeans(object):
     def euclidean(self, point, X):
         return np.sqrt(np.sum((point - X)**2, axis=1))
 
-    # Part of the code is inspired by a script of Luke Turner, see [https://towardsdatascience.com/create-your-own-k-means-clustering-algorithm-in-python-d7d4c9077670]
+    # Part of the def below is inspired by a script of Luke Turner, see [https://towardsdatascience.com/create-your-own-k-means-clustering-algorithm-in-python-d7d4c9077670]
     def fit(self, X):        
         _,n_dim =  X.shape
         min_, max_ = np.min(X, axis=0), np.max(X, axis=0)
