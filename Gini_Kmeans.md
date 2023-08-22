@@ -71,6 +71,7 @@ print('Labels Euclidean:', classification)
 class_centers_G, classification_gini = kmeans.evaluate_gini(X_train)
 print('Centroids Gini:', class_centers_G)
 print('Labels Gini:', classification_gini)
+# True labels
 print('True labels: ', true_labels.T)
 ```
 
