@@ -56,8 +56,8 @@ print(np.mean(x5, axis=0))
 ```python
 # Classification
 kmeans = GiniKmeans(n_clusters=5, max_iter=300)
-center = kmeans.fit(X_train) 
-center_gini = kmeans.fit_gini(X_train)
+center = kmeans.fit(X_train)              # fit with L2 metric
+center_gini = kmeans.fit_gini(X_train)    # fit with Gini distance
 ```
 
 ### Results
