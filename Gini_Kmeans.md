@@ -67,7 +67,7 @@ center_gini = kmeans.fit_gini(X_train)    # fit with Gini distance
 class_centers, classification = kmeans.evaluate(X_train)
 print('Centroids Euclidean:', class_centers)
 print('Labels Euclidean:', classification)
-# Gini
+# Gini :
 class_centers_G, classification_gini = kmeans.evaluate_gini(X_train)
 print('Centroids Gini:', class_centers_G)
 print('Labels Gini:', classification_gini)
