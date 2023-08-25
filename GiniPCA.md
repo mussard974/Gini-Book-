@@ -222,9 +222,7 @@ components_copy = components.numpy()
 outliers_var = []
 outliers_gini = []
 for i in range (2):
-    outliers_var.append(grubbs.max_test_indices(components[:,i], alpha = 0.05))
     outliers_gini.append(grubbs.max_test_indices(components_copy[:,i], alpha = 0.05))
-print('Atypical points in standard PCA:', outliers_var)
 print('Atypical points in Gini PCA:', outliers_gini)
 ```
 
