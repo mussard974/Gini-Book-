@@ -219,7 +219,6 @@ print("Significant variables on axis 1:", U_test)
 # Grubbs test
 components = model.project(x)
 components_copy = components.numpy()
-outliers_var = []
 outliers_gini = []
 for i in range (2):
     outliers_gini.append(grubbs.max_test_indices(components_copy[:,i], alpha = 0.05))
