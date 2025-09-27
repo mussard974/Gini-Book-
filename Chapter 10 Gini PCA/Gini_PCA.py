@@ -1,3 +1,36 @@
+"""
+Preamble
+--------
+This module implements Gini-PCA, an extension of Principal Component Analysis 
+that leverages Gini-based ranks and correlations instead of standard covariance. 
+It provides tools for dimensionality reduction, outlier detection, correlation 
+analysis, and visualization.
+
+Features:
+    - Compute Gini-based ranks, correlations, and distance matrices
+    - Perform PCA using Gini distance metrics
+    - Project and reconstruct data with Gini-based eigen decomposition
+    - Evaluate eigenvalues and contributions of components
+    - Detect outliers using Grubbs' test
+    - Integrate categorical and mixed correlations (via Kendall’s tau)
+    - Visualize results in 3D plots
+
+Dependencies:
+    - torch
+    - numpy
+    - pandas
+    - scipy (scipy.stats, kendalltau)
+    - scikit-learn (PCA, scaling utilities)
+    - matplotlib (2D and 3D visualization)
+    - iteration_utilities (deepflatten)
+    - smirnov_grubbs (OUTLIERS / outliers package)
+
+Class:
+    GiniPca:
+        Encapsulates methods for Gini-based PCA, correlation analysis, and 
+        data visualization.
+"""
+
 import torch
 import pandas as pd
 import numpy as np
@@ -51,12 +84,9 @@ class GiniPca(object):
     def fit(self, x):
         z = self.scale_gini(x)
         GMD = self.gmd(z)
-        valp, vecp = torch.linalg.eig(GMD.T + GMD)
-        sorted_indices = torch.argsort(torch.real(valp), descending=True)
-        vecp_real = torch.real(vecp)
-        vecp_sorted = vecp_real[:, sorted_indices]       
-        F = z @ vecp_sorted
-        return F, vecp_sorted
+        _, vecp = torch.linalg.eig(GMD.T + GMD)
+        F = z @ torch.real(vecp)
+        return F, vecp
 
     def preprocess_train_test(self, x_train, x_test):
         x_center = x_test - x_train.mean(dim=0, keepdim=True)
@@ -66,13 +96,11 @@ class GiniPca(object):
     def fit_inverse(self, x_train, x_test):
         z = self.preprocess_train_test(x_train, x_test)
         GMD = self.gmd(z)
-        valp, vecp = torch.linalg.eig(GMD.T + GMD)
-        sorted_indices = torch.argsort(torch.real(valp), descending=True)
-        vecp = vecp.type(torch.float64) 
-        vecp_real = torch.real(vecp)
-        F = z @ vecp_real
+        _, vecp = torch.linalg.eig(GMD.T + GMD)        
+        vecp = vecp.type(torch.float64)    
+        F = z @ vecp
         F[:, self.n_components::] = 0
-        F_inverse = F @ torch.inverse(vecp_real)
+        F_inverse = F @ torch.inverse(vecp)
         F_recenter = F_inverse + self.mean_train_test
         return F_recenter
 
@@ -81,29 +109,19 @@ class GiniPca(object):
         GMD = self.gmd(z)
         valp, _ = torch.linalg.eig(GMD.T + GMD)
         A = torch.real(valp) / torch.real(valp).sum() * 100
-        A_sorted, _ = torch.sort(A, descending=True) 
-        return A_sorted
+        return A
 
     def absolute_contrib(self, x):
         n, k = x.shape
         z = self.scale_gini(x)
         GMD = self.gmd(z)
         valp, vecp = torch.linalg.eig(GMD.T + GMD)
-        sorted_indices = torch.argsort(torch.real(valp), descending=True)
-        vecp_real = torch.real(vecp)
-        vecp = vecp_real[:, sorted_indices]       
-        F = z @ vecp
+        F = z @ torch.real(vecp)
         rank_z = self.ranks(z)
         return ((-2/(n*(n-1)))* self.gini_param * (F*(rank_z @ torch.real(vecp)))) / (torch.real(valp)/2) 
 
     def relative_contrib(self, x):
-        z = self.scale_gini(x)
-        GMD = self.gmd(z)
-        valp, vecp = torch.linalg.eig(GMD.T + GMD)
-        sorted_indices = torch.argsort(torch.real(valp), descending=True)
-        vecp_real = torch.real(vecp)
-        vecp = vecp_real[:, sorted_indices]       
-        F = z @ vecp
+        F = self.project(x)
         return torch.abs(F) / torch.sum(abs(F), axis=0)
 
     def gini_correl_axis(self, x):
@@ -138,9 +156,7 @@ class GiniPca(object):
     def optimal_gini_param(self, x):
         if type(x) == torch.Tensor:
             x_copy = x.numpy()
-        else:
-            x_copy = x
-        _, k = x.shape
+        n, k = x.shape
         a = []
         for i in range(k):
             a.append(grubbs.max_test_indices(x_copy[:, i], alpha=0.05))
@@ -155,7 +171,10 @@ class GiniPca(object):
             GMD = self.gmd(z)
             valp, _ = torch.linalg.eig(GMD.T + GMD)
             eigen_val.append(torch.abs(torch.real(valp[:2].sum())/torch.real(valp).sum() - torch.real(valp_outlier[:2].sum())/torch.real(valp_outlier).sum()))
-        gini_param = (torch.argmin(torch.tensor(eigen_val))+1)/10 + 1
+        if (torch.argmin(torch.tensor(eigen_val))+1)/10 == 1:
+            gini_param = (torch.argmin(torch.tensor(eigen_val))+1)/10 + 0.1
+        else:
+            gini_param = (torch.argmin(torch.tensor(eigen_val))+1)/10
         return gini_param
 
     def plot3D(self, x):
@@ -165,7 +184,7 @@ class GiniPca(object):
         ax = fig.add_subplot(111, projection='3d', elev=-150, azim=110)
         F = self.fit(x_copy)[0]
         for line in range(n):
-            ax.scatter(F[line, 0], F[line, 1], F[line, 2], cmap=plt.cm.Set1, edgecolor='k', s=40)
+            ax.scatter(F[line, 0], F[line, 1], F[line, 2], color='b', edgecolor='k', s=40)
             ax.text(F[line, 0], F[line, 1], F[line, 2], x.index[line], size=10, color='k')
         ax.set_xlabel("1st component")
         ax.set_xticklabels([])
@@ -185,3 +204,40 @@ class GiniPca(object):
         if len(outliers_variables) > 0:
             self.number_outliers = len(outliers_variables)
             return self.number_outliers
+
+    # Ajout des nouvelles fonctions pour calculer les corrélations catégorielles et mixtes
+    def calculate_categorical_correlations_kendall(self, df, categorical_columns):
+        corr_matrix = pd.DataFrame(np.zeros((len(categorical_columns), len(categorical_columns))), 
+                                   index=categorical_columns, columns=categorical_columns)
+        for col1 in categorical_columns:
+            for col2 in categorical_columns:
+                if col1 != col2:
+                    corr_matrix.loc[col1, col2], _ = kendalltau(df[col1], df[col2])
+        return corr_matrix
+
+    def calculate_mixed_correlations_kendall(self, df, quantitative_columns, categorical_columns):
+        corr_matrix = pd.DataFrame(np.zeros((len(quantitative_columns), len(categorical_columns))), 
+                                   index=quantitative_columns, columns=categorical_columns)
+        for quant_col in quantitative_columns:
+            for cat_col in categorical_columns:
+                corr_matrix.loc[quant_col, cat_col], _ = kendalltau(df[quant_col], df[cat_col])
+        return corr_matrix
+
+    # Intégration de toutes les corrélations
+    def integrate_all_correlations(self, df, quantitative_columns, categorical_columns):
+        x = torch.tensor(df[quantitative_columns].values, dtype=torch.float64)
+        gmd_matrix = self.gmd(x)
+        cat_corr_matrix = self.calculate_categorical_correlations_kendall(df, categorical_columns)
+        mixed_corr_matrix = self.calculate_mixed_correlations_kendall(df, quantitative_columns, categorical_columns)
+        
+        combined_matrix = pd.concat([
+            pd.concat([pd.DataFrame(gmd_matrix.numpy(), index=quantitative_columns, columns=quantitative_columns), mixed_corr_matrix], axis=1),
+            pd.concat([mixed_corr_matrix.T, cat_corr_matrix], axis=1)
+        ], axis=0)
+        
+        return combined_matrix
+
+    # Calcul des valeurs propres et vecteurs propres
+    def calculate_eigenvalues_and_vectors(self, correlation_matrix):
+        eigenvalues, eigenvectors = np.linalg.eig(correlation_matrix)
+        return eigenvalues, eigenvectors
