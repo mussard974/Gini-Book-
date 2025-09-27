@@ -1,5 +1,5 @@
 """
-Gini Distance for KNN
+Gini Distance for Agglomerative Clustering
 --------
 This module provides an implementation of Gini-based distances and related 
 clustering utilities. It is designed to extend traditional distance metrics by 
