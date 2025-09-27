@@ -1,3 +1,43 @@
+"""
+Fixed Effects Gini Regression 
+--------
+This module implements a Gini-based fixed-effects estimator for panel data,
+alongside OLS for comparison. It supports within- and between-group
+transformations, jackknife inference, instrumental-covariance inference,
+and rich summary outputs.
+
+Components:
+    - GiniFixedEffects:
+        * Within- or between-group centering
+        * Nonparametric Gini estimator (default) and optional parametric estimator
+        * Jackknife-based standard errors for coefficients, fixed effects,
+          intercept, Gini R², and a heterogeneity test
+        * Instrumental-style asymptotic covariance option ('instrument')
+        * Outlier counts per feature (Grubbs), VIF diagnostics, DW statistic,
+          and Breusch–Pagan test
+        * OLS path for baseline fixed-effects comparison
+
+Key Methods:
+    - fit(df, id_group, y, X, method, estimator, centering, cov, sampling):
+        Choose 'Gini' or 'OLS'; 'parametric' for parametric Gini; 'within' or
+        'between' centering; optional 'instrument' covariance; optional
+        group-wise sampling for jackknife speed.
+    - summary():
+        Prints formatted tables for model stats, coefficients, fixed effects,
+        feature diagnostics, and (optionally) a heterogeneity U-test.
+
+Assumptions:
+    - Panel rows are grouped by `id_group` (sorting recommended).
+    - y is a Series/array; X is a DataFrame/array (names inferred if absent).
+
+Dependencies:
+    - numpy, pandas, scipy, matplotlib
+    - statsmodels (OLS, diagnostics)
+    - scikit-learn (preprocessing, model selection, metrics)
+    - torch (optional tensor formatting)
+    - OUTLIERS/outliers (Grubbs’ test)
+"""
+
 from datetime import datetime
 from scipy.stats import norm
 from statsmodels.iolib.table import SimpleTable
@@ -549,4 +589,5 @@ class GiniFixedEffects(object):
                     print(df)
                     print(separator_line_2) 
 #                   print("U-statistics:", self.test_R2, "\n", "p_value:", self.p_values_test_R2)
+
 
