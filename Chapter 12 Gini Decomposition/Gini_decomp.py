@@ -1,3 +1,39 @@
+"""
+Gini Decomposition
+--------
+This module implements the (α, β)-Gini decomposition of inequality, a framework 
+for breaking down inequality into within-group, between-group, and transvariation 
+components. It follows the methodology developed in:
+
+    - Mornet P., Zoli C., Mussard S., Sadefo-Kamdem J., Seyte F., Terraza M. (2013), 
+      "The (α, β)-multi-level α-Gini decomposition with an illustration to income 
+      inequality in France in 2005." Economic Modelling, vol. 35 (C), pp. 944–963.
+    - Mussard, S. and Mornet, P. (2019), 
+      "A Note on α-Gini Measures." Review of Income and Wealth, 65: 675–682.
+
+Features:
+    - Compute intra-group and inter-group Gini indices
+    - Decompose inequality into:
+        * Within-group Gini (Gw)
+        * Between-group Gini (Ggb / Gnb)
+        * Transvariation component (Gt)
+    - Support for α and β parameterization of Gini measures
+    - Compute correlation ratios (ANOGI interpretation)
+    - Generate summary tables with PrettyTable
+    - Export weighted Gini indices and between-group distance matrices
+    - Provide formatted outputs for inspection in console or Jupyter notebooks
+
+Dependencies:
+    - pandas
+    - torch
+    - prettytable
+
+Class:
+    GiniDecomposition:
+        Provides methods for fitting the decomposition to a dataset, 
+        computing group-level indices, and producing formatted summaries.
+"""
+
 import pandas as pd
 import torch
 from prettytable import PrettyTable
