@@ -1,3 +1,38 @@
+"""
+Gini PCA
+--------
+This module provides an implementation of Gini-PCA (Principal Component Analysis 
+with Gini-based metrics). It extends classical PCA by incorporating Gini distance 
+and rank-based measures, enabling robust analysis in the presence of outliers 
+and non-Gaussian distributions.
+
+Features:
+    - Compute Gini-based ranks, distances, and correlation matrices
+    - Perform dimensionality reduction using eigen decomposition with Gini metrics
+    - Reconstruct data via inverse transformation
+    - Evaluate explained variance through eigenvalues (sorted by importance)
+    - Compute absolute and relative contributions of components
+    - Assess axis correlations and U-statistics
+    - Automatically select optimal Gini parameter with outlier detection (Grubbs' test)
+    - Visualize projections in 3D scatter plots
+    - Identify potential outliers
+
+Dependencies:
+    - torch
+    - numpy
+    - pandas
+    - scipy (scipy.stats, kendalltau)
+    - scikit-learn (PCA, scaling utilities)
+    - matplotlib (2D and 3D visualization)
+    - iteration_utilities (deepflatten)
+    - smirnov_grubbs (OUTLIERS / outliers package)
+
+Class:
+    GiniPca:
+        Encapsulates methods for rank-based PCA, eigenvalue analysis, 
+        outlier detection, and visualization using Gini metrics.
+"""
+
 import torch
 import pandas as pd
 import numpy as np
@@ -185,3 +220,4 @@ class GiniPca(object):
         if len(outliers_variables) > 0:
             self.number_outliers = len(outliers_variables)
             return self.number_outliers
+
