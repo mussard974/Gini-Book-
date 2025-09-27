@@ -1,5 +1,5 @@
 """
-Preamble
+Gini PCA
 --------
 This module implements Gini-PCA, an extension of Principal Component Analysis 
 that leverages Gini-based ranks and correlations instead of standard covariance. 
@@ -241,3 +241,4 @@ class GiniPca(object):
     def calculate_eigenvalues_and_vectors(self, correlation_matrix):
         eigenvalues, eigenvectors = np.linalg.eig(correlation_matrix)
         return eigenvalues, eigenvectors
+
