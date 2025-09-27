@@ -1,3 +1,41 @@
+"""
+Gini Discriminant Analysis - GDA
+--------
+This module implements a generalized Gini-based discriminant analysis (GiniAFD)
+for binary and multiclass classification. It builds rank-weighted covariance/
+correlation operators and derives discriminant axes via a Gini-analogue of
+between/within decomposition.
+
+Main features:
+    • Flexible Gini parameter (nu / gini_param) for robustness and tail emphasis
+    • Multiple decision rules:
+        - 'euclidean_gini'   : rank-adjusted Mahalanobis-style scoring
+        - 'geometric_gini'   : nearest centroid in Gini latent space (L1)
+        - 'homo_gini'        : homoscedastic Gini LDA (shared gcov)
+        - 'hetero_gini'      : heteroscedastic Gini QDA (group gcov)
+        - 'gini_estimator'   : Euclidean scoring using within-Gini covariance
+    • Automatic handling of pandas/NumPy, one-hot/binary targets
+    • Outlier counting per feature using Grubbs
+    • Model selection helpers:
+        - grid_search(...)        : holdout search over nu × method
+        - grid_search_kfold(...)  : KFold CV to select nu and method
+    • Diagnostics & reporting:
+        - Eigenvalues / cumulative % for discriminant axes
+        - Correlations & p-values between axes and original features
+        - Summary banner (sizes, classes, outliers, nu)
+
+Key API:
+    - fit(X, y, nb_components=None)         -> learns axes (self.w) and caches stats
+    - predict(X, y, method=...)             -> returns predicted labels/indices
+    - summary()                             -> prints model/eigen/correlation tables
+    - grid_search(...) / grid_search_kfold(...)
+
+Notes:
+    - Inputs are centered with Gini scaling via gcov_centered.
+    - For binary y, one-hot expansion is handled internally.
+    - Set nb_components to restrict projection dimensionality.
+"""
+
 import numpy as np
 import pandas as pd
 from datetime import datetime
