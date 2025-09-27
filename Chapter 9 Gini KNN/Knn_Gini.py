@@ -1,3 +1,26 @@
+"""
+Gini KNN
+--------
+This module defines a rank-based Gini distance utility.
+
+Overview:
+    - Given a reference matrix X (n_train × d) and a query matrix X_new (n_test × d),
+      it computes a Gini-style distance between each query row and all rows of X.
+    - Ranks are computed columnwise and transformed with the generalized Gini
+      parameter (gini_param ≥ 1), emphasizing tails as gini_param increases.
+
+Key API:
+    - GiniDistance(X, gini_param=2): store training/reference data.
+    - compute_gini_ranks(X_new): conditional (decumulative) ranks for X and X_new.
+    - gini_distance(x, Y, decum_rank_x, decum_ranks_Y): distance for one point.
+    - compute_distances(X_new): full (n_test × n_train) distance matrix.
+
+Notes:
+    - Inputs must be NumPy arrays of shape (n_samples, n_features).
+    - Distances are signed via rank-weighted differences; smaller values
+      indicate closer rank-adjusted proximity.
+"""
+
 import numpy as np
 import pandas as pd
 from datetime import datetime
