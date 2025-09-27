@@ -1,3 +1,39 @@
+"""
+Gini-PLS
+--------
+This module implements Gini-based Partial Least Squares (Gini-PLS) regression,
+following Mussard & Souissi-Benrejab (2019), with several algorithmic variants:
+
+    • Gini1-PLS1 — weights built from cov(y, rank(X))
+    • Gini2-PLS1 — weights built from Gini regression betas
+    • Gini3-PLS1 — hybrid using covariances of residuals and partial residuals
+    • PLS        — standard (moment-based) PLS as a baseline
+
+Key capabilities:
+    - Robust, rank-based component construction for non-Gaussian / outlier-prone data
+    - Centering/scaling, rank handling with ties
+    - Cross-validation (Q²) to select the number of components
+    - Rich summaries: coefficients (latent & reconstructed in original space),
+      SEs, t/p values, VIP scores, VIF, outlier counts, redundancy R² tables
+    - Diagnostics: Breusch–Pagan p-value, Durbin–Watson, plots (scores, AVP,
+      correlation circle)
+
+Primary API:
+    - fit(y, X, method='Gini1-PLS1'|'Gini2-PLS1'|'Gini3-PLS1'|'PLS', n_components=m)
+    - cross_validation(n_splits=5)
+    - predict(X_new)
+    - summary() and summary_OLS() for comparison
+    - plot() for 2D/3D scores, AVP, and correlation circle
+
+Dependencies:
+    numpy, pandas, scipy, statsmodels, scikit-learn, seaborn, matplotlib,
+    OUTLIERS/outliers (Grubbs) for outlier counts.
+
+Notes:
+    - Inputs can be arrays or DataFrames/Series; names inferred where possible.
+    - Coefficients in the original data space are reconstructed via loadings/weights.
+"""
+
 from datetime import datetime
 from statsmodels.iolib.table import SimpleTable
 import pandas as pd
@@ -529,4 +565,5 @@ class GiniPLS:
         X = sm.add_constant(self.X)
         model = sm.OLS(self.y, X).fit()
         return print(model.summary())
+
 
