@@ -1,3 +1,31 @@
+"""
+Gini Distance for KNN
+--------
+This module provides an implementation of Gini-based distances and related 
+clustering utilities. It is designed to extend traditional distance metrics by 
+leveraging Gini ranks, allowing for more robust handling of non-Gaussian data 
+and outliers.
+
+Features:
+    - Compute Gini-based ranks and distances between matrices
+    - Construct full pairwise distance matrices
+    - Detect outliers using Grubbs’ statistical test
+    - Map cluster labels to ground-truth labels via confusion matrices
+    - Visualize hierarchical clustering with dendrograms
+
+Dependencies:
+    - numpy
+    - pandas
+    - scipy (stats, hierarchical clustering, Grubbs’ test via outliers/OUTLIERS package)
+    - scikit-learn (AgglomerativeClustering, metrics)
+    - matplotlib (dendrogram plotting)
+
+Class:
+    GiniDistance:
+        Encapsulates methods for computing Gini ranks, distances, 
+        outlier detection, label mapping, and dendrogram visualization.
+"""
+
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 from sklearn.cluster import AgglomerativeClustering
