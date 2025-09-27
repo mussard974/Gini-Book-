@@ -72,12 +72,13 @@ class GiniRegression(object):
     
     def format_y(self, y):
         if isinstance(y, pd.DataFrame):
-            y = y.values
-            return y.flatten() 
-        elif isinstance(y, torch.Tensor):
             return y.to_numpy().flatten()
+        elif isinstance(y, pd.Series):
+            return y.to_numpy().flatten()
+        elif isinstance(y, torch.Tensor):
+            return y.detach().cpu().numpy().flatten()
         else:
-            return y.flatten()
+            return np.array(y).flatten()
                 
     def x_names(self, x):
         if isinstance(x, pd.DataFrame):
@@ -502,9 +503,9 @@ class Hetero(GiniRegression):
         else:
             raise Exception("Choose an heteroskedastic method: hetero = 'WLS', 'Breusch-Pagan' or 'iterative WLS' ")
 
-    def summary(self):
-        self.cov = self.hetero
-        super().summary()    
+    #def summary(self):
+    #    self.cov = self.hetero
+    #    super().summary()    
         
         
 class Autocorrelation(GiniRegression):
