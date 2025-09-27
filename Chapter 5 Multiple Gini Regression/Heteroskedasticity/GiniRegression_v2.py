@@ -1,3 +1,41 @@
+"""
+Gini Regression
+--------
+This module implements Gini-based regression and two common extensions
+(heteroskedasticity handling and autocorrelation correction).
+
+Components:
+    - GiniRegression:
+        * Nonparametric Gini estimator for coefficients
+        * Optional parametric estimator via co-Gini minimization
+        * Jackknife-based standard errors and Gini-R² inference
+        * Multiple covariance options: 'instrument', 'asympt', 'bandwidth iid', 'Jackknife'
+        * VIF diagnostics (Gini-based and OLS)
+        * Prediction and formatted summary output
+
+    - Hetero (inherits GiniRegression):
+        * Gini-weighted least squares (WLS) and Feasible Gini Generalized Regression (FGGR)
+        * Iterative WLS for heteroskedasticity (convergence-controlled)
+        * Entry points via fit(..., hetero='WLS' | 'FGGR' | 'iterative WLS')
+
+    - Autocorrelation (inherits GiniRegression):
+        * Gini autocorrelation and Toeplitz-type transforms
+        * Prais–Winsten-like AR(1) correction ('Prais-Winsten')
+        * Optional correlogram including Gini-ACF vs. standard ACF and Ljung–Box tests
+
+Dependencies:
+    - numpy, pandas, scipy, matplotlib
+    - statsmodels (tables, diagnostics, time series tools)
+    - scikit-learn (preprocessing, model selection, metrics)
+    - torch (optional tensors in some utilities)
+    - OUTLIERS/outliers (Grubbs’ test)
+
+Usage Notes:
+    - By default, the nonparametric estimator is used; set parametric_estimator=True for
+      the parametric version and choose a covariance estimator via cov=...
+    - If your design already includes an intercept column, pass add_constant=True to fit.
+"""
+
 import torch
 from datetime import datetime
 from scipy.stats import norm
@@ -612,4 +650,5 @@ class Autocorrelation(GiniRegression):
     def summary(self):
         #self.cov = self.hetero
         super().summary()    
+
                                 
