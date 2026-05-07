@@ -29,8 +29,7 @@ The book introduces a **robust, non-Euclidean framework** for data analysis, wit
 This book is intended for:
 
 - Students in **data science, statistics, and econometrics**
-- Researchers working on **inequality, robust statistics, or machine learning**
-- Practitioners looking for alternatives to classical methods (OLS, PCA, etc.)
+- Researchers and practitioners looking for alternatives to classical methods (OLS, PCA, etc.)
 
 ---
 
@@ -83,6 +82,7 @@ Features:
 
 ## ⚙️ Requirements
 
+```python
 - Python ≥ 3.11
 - Recommended tools:
   - VS Code
@@ -107,16 +107,6 @@ source gini_env/bin/activate   # or .\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
----
-
-## ✨ Why Gini-Based Machine Learning?
-
-Unlike classical methods based on variance and Euclidean distance, Gini-based approaches:
-
-- Are **more robust to outliers**
-- Work well with **heavy-tailed distributions**
-- Incorporate **rank information**
-- Offer a **flexible alternative geometry**
 
 ---
 
@@ -133,6 +123,3 @@ Stéphane Mussard
 
 ---
 
-## 🙏 Acknowledgments
-
-This work builds upon decades of research on the Gini methodology and is inspired by leading contributors in statistics and econometrics.
