@@ -1,5 +1,3 @@
-![Title Page](title-page.png)
-
 # Machine Learning with Gini Indices $-$ Applications with Python
 
 **Author:** Stéphane Mussard  
