@@ -95,7 +95,7 @@ Main libraries:
 ## 🚀 Getting Started
 
 ```bash
-git clone https://github.com/mussard974/Gini-Book.git
+git clone https://github.com/mussard974/Gini-Book-.git
 cd Gini-Book
 python -m venv gini_env
 source gini_env/bin/activate   # or .\Scripts\activate on Windows
