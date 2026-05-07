@@ -78,7 +78,6 @@ All implementations are provided in Python and can be reused under the MIT licen
 
 ## ⚙️ Requirements
 
-```python
 - Python ≥ 3.11
 - Recommended tools:
   - VS Code
