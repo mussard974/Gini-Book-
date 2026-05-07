@@ -71,9 +71,6 @@ This book is intended for:
 
 All implementations are provided in Python and can be reused under the MIT license.
 
-👉 GitHub repository:  
-[Github](https://github.com/mussard974/Gini-Book-)
-
 Features:
 - Jupyter notebooks
 - Reproducible experiments
