@@ -69,9 +69,7 @@ This book is intended for:
 
 ## 💻 Python & Code
 
-All implementations are provided in Python and can be reused under the MIT license.
-
-Features:
+All implementations are provided in Python and can be reused under the MIT license:
 - Jupyter notebooks
 - Reproducible experiments
 - Real datasets and simulations
