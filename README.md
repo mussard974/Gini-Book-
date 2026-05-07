@@ -1,7 +1,4 @@
-<p align="center">
-  <h1>Machine Learning with Gini Indices</h1>
-  <h3>Applications with Python</h3>
-</p>
+# Machine Learning with Gini Indices -- Applications with Python
 
 **Author:** Stéphane Mussard  
 Nîmes University (CHROME), France  
