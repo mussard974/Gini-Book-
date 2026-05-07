@@ -1,9 +1,3 @@
----
-runme:
-  id: 01HSWZVF1HY3JSBYH7JJY8DEP0
-  version: v3
----
-
 # Gini Multiple Regression
 
 ---
